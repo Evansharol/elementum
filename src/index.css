@@ -1,0 +1,37 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'Gerbil';
+  src: local('Gerbil'), local('gerbil'), url('./fonts/gerbil.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --white: #ffffff;
+  --black: #111111;
+  --highlight-yellow: #f5e642;
+  --highlight-pink: #f4b8d0;
+  --highlight-green: #b8e4c9;
+  --accent-purple: #7c4dff;
+  --nav-text: #333;
+  --body-text: #555;
+  --border-dark: #1a1a2e;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
