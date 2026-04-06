@@ -1,16 +1,67 @@
-# React + Vite
+# Elementum (Docker-Only Setup)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is configured to be built and run using Docker only.
 
-Currently, two official plugins are available:
+## Deployment
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Use Docker Compose on any machine or server with Docker installed.
 
-## React Compiler
+### 1. Build and run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+docker compose up --build -d
+```
 
-## Expanding the ESLint configuration
+### 2. Open the app
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Visit:
+
+```text
+http://localhost:8080
+```
+
+### 3. Stop the app
+
+```bash
+docker compose down
+```
+
+### Optional: single-image Docker run
+
+```bash
+docker build -t elementum-app .
+docker run --rm -p 8080:80 elementum-app
+```
+
+## Requirements
+
+- Docker Desktop (or Docker Engine + Compose)
+
+## Run With Docker Compose
+
+```bash
+docker compose up --build
+```
+
+App will be available at:
+
+- http://localhost:8080
+
+## Run With Docker (without Compose)
+
+```bash
+docker build -t elementum-app .
+docker run --rm -p 8080:80 elementum-app
+```
+
+## Stop Containers
+
+```bash
+docker compose down
+```
+
+## Notes
+
+- Multi-stage Docker build is used for a smaller production image.
+- Nginx serves the Vite build output from `dist`.
+- SPA routing is supported with `try_files ... /index.html` in `nginx.conf`.

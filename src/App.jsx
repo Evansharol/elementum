@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './App.module.css'
+import confImage from './images/conf.png'
 
 const teamMembers = [
   {
@@ -60,6 +61,62 @@ const teamMembers = [
 ]
 
 export default function App() {
+  useEffect(() => {
+    const selectorList = [
+      styles.headingWrap,
+      styles.featureCardReference,
+      styles.featureVisual,
+      styles.featureVisualLeft,
+      styles.featureCardAlt,
+      styles.offerHeading,
+      styles.testimonialCard,
+      styles.newsletterTop,
+    ]
+
+    const targets = Array.from(
+      document.querySelectorAll(selectorList.map((name) => `.${name}`).join(','))
+    )
+
+    if (targets.length === 0) {
+      return undefined
+    }
+
+    const listeners = []
+
+    targets.forEach((element) => {
+      element.classList.add(styles.cursorReactive)
+
+      const onMove = (event) => {
+        const rect = element.getBoundingClientRect()
+        const relX = (event.clientX - rect.left) / rect.width - 0.5
+        const relY = (event.clientY - rect.top) / rect.height - 0.5
+        const maxShift = Number(element.getAttribute('data-float-strength')) || 14
+
+        element.style.setProperty('--cursor-float-x', `${(relX * maxShift * 2).toFixed(2)}px`)
+        element.style.setProperty('--cursor-float-y', `${(relY * maxShift * 1.4).toFixed(2)}px`)
+      }
+
+      const onLeave = () => {
+        element.style.setProperty('--cursor-float-x', '0px')
+        element.style.setProperty('--cursor-float-y', '0px')
+      }
+
+      element.addEventListener('mousemove', onMove)
+      element.addEventListener('mouseleave', onLeave)
+      listeners.push({ element, onMove, onLeave })
+    })
+
+    return () => {
+      listeners.forEach(({ element, onMove, onLeave }) => {
+        element.removeEventListener('mousemove', onMove)
+        element.removeEventListener('mouseleave', onLeave)
+        element.classList.remove(styles.cursorReactive)
+        element.style.removeProperty('--cursor-float-x')
+        element.style.removeProperty('--cursor-float-y')
+      })
+    }
+  }, [])
+
   return (
     <div className={styles.page}>
       <div className={styles.borderFrame} />
@@ -184,6 +241,9 @@ export default function App() {
           <g filter="url(#filter0_d_2_9)">
             <path d="M1488.65 134.467C1446.64 22.3687 1055.93 -89.3365 963 120.86C835.832 408.503 777.269 398.935 693.689 397.279C610.11 395.623 306.809 225.312 181.153 337.967C41.357 463.299 144.653 654.467 12.6534 618.727" stroke="#FF6D6D" strokeWidth="5" />
           </g>
+          <path className={styles.connectorCurveShimmer} d="M1488.65 134.467C1446.64 22.3687 1055.93 -89.3365 963 120.86C835.832 408.503 777.269 398.935 693.689 397.279C610.11 395.623 306.809 225.312 181.153 337.967C41.357 463.299 144.653 654.467 12.6534 618.727" stroke="#FFE0E0" strokeWidth="5" strokeLinecap="round" />
+          <path className={styles.connectorCurveShimmerSoft} d="M1488.65 134.467C1446.64 22.3687 1055.93 -89.3365 963 120.86C835.832 408.503 777.269 398.935 693.689 397.279C610.11 395.623 306.809 225.312 181.153 337.967C41.357 463.299 144.653 654.467 12.6534 618.727" stroke="#FFD2D2" strokeWidth="4" strokeLinecap="round" />
+          <path className={styles.connectorCurveShimmerSpark} d="M1488.65 134.467C1446.64 22.3687 1055.93 -89.3365 963 120.86C835.832 408.503 777.269 398.935 693.689 397.279C610.11 395.623 306.809 225.312 181.153 337.967C41.357 463.299 144.653 654.467 12.6534 618.727" stroke="#FFF2F2" strokeWidth="3" strokeLinecap="round" />
           <defs>
             <filter id="filter0_d_2_9" x="0" y="0" width="1502.99" height="653.604" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
               <feFlood floodOpacity="0" result="BackgroundImageFix" />
@@ -200,14 +260,16 @@ export default function App() {
 
         <div className={styles.featureRowAlt}>
           <div className={styles.featureVisualLeft}>
-            <svg className={styles.imageBackdropLeft} viewBox="0 0 233 227" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-              <path d="M45.3254 -2.02656e-06L232.277 40.5018L186.952 226.343L4.78625e-05 185.841L45.3254 -2.02656e-06Z" fill="#FF7171" />
+            <svg className={styles.leftCircleTriangleBefore} width="238" height="201" viewBox="0 0 238 201" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M118.646 0L237.291 200.25H3.05176e-05L118.646 0Z" fill="#FF7171"/>
             </svg>
-            <span className={styles.cornerTriangleAlt} aria-hidden="true" />
             <img
               src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&h=900&fit=crop&crop=faces"
               alt="Design planning"
             />
+            <svg className={styles.leftCircleTriangleAfter} width="238" height="201" viewBox="0 0 238 201" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M118.646 0L237.291 200.25H3.05176e-05L118.646 0Z" fill="#FF7171"/>
+            </svg>
           </div>
 
           <article className={styles.featureCardAlt}>
@@ -229,6 +291,194 @@ export default function App() {
           </article>
         </div>
 
+      </section>
+
+      <section className={styles.offerSection}>
+        <svg className={styles.offerCurve} width="864" height="654" viewBox="0 0 864 654" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <g filter="url(#filter0_d_1_158)">
+            <path d="M1488.65 134.467C1446.64 22.3687 1055.93 -89.3365 963 120.86C835.832 408.503 777.269 398.935 693.689 397.279C610.11 395.623 306.809 225.312 181.153 337.967C41.357 463.299 144.653 654.467 12.6534 618.727" stroke="#FF6D6D" strokeWidth="5" />
+          </g>
+          <defs>
+            <filter id="filter0_d_1_158" x="0" y="0" width="1502.99" height="653.604" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+              <feFlood floodOpacity="0" result="BackgroundImageFix" />
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+              <feOffset dy="16" />
+              <feGaussianBlur stdDeviation="6" />
+              <feComposite in2="hardAlpha" operator="out" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_158" />
+              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_158" result="shape" />
+            </filter>
+          </defs>
+        </svg>
+
+        <h2 className={styles.offerHeading}>
+          <span className={styles.offerHeadingLine}>What we <span className={styles.offerCan}>can</span></span>
+          <span className={styles.offerHeadingLine}>
+            <span className={styles.offerWordWrap}>
+              offer
+              <svg className={styles.offerUnderline} viewBox="0 0 160 17" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M18.6 1H145.3L0 8.5H159L78.5 16" stroke="#FFC250" strokeWidth="2" />
+              </svg>
+            </span>{' '}
+            you!
+          </span>
+        </h2>
+
+        <div className={styles.offerList}>
+          <div className={styles.offerRow}>
+            <p className={styles.offerMeta}>Office of multiple<br />interest content</p>
+            <p className={styles.offerTitle}>Colaborative &amp; partnership</p>
+            <span className={styles.offerArrow} aria-hidden="true">→</span>
+          </div>
+
+          <div className={styles.offerRow}>
+            <p className={styles.offerMeta}>The hanger US Air force<br />digital experimantal</p>
+            <p className={styles.offerTitle}>We talk about our weight</p>
+            <span className={styles.offerArrow} aria-hidden="true">→</span>
+          </div>
+
+          <div className={`${styles.offerRow} ${styles.offerRowLast}`}>
+            <p className={styles.offerMeta}>Data faucet content,<br />social, digital</p>
+            <p className={styles.offerTitle}>Piloting digital <span className={styles.confidenceWrap}>
+              <svg className={styles.confidenceCircle} width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="circleClip">
+                    <circle cx="80" cy="80" r="80" />
+                  </clipPath>
+                </defs>
+                <image href={confImage} x="0" y="0" width="160" height="160" clipPath="url(#circleClip)" />
+              </svg>
+              confidence
+            </span></p>
+            <span className={styles.offerArrow} aria-hidden="true">→</span>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.testimonialsSection}>
+        <h2 className={styles.testimonialsHeading}>
+          <span className={styles.whatBubble}>What</span> our customer <br />
+          says <span className={styles.aboutUsHighlight}>
+            About Us
+            <svg className={styles.aboutUsUnderline} width="372" height="33" viewBox="0 0 372 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M45.0338 1.5H336.4L0.0641479 15.9H371.064L183.066 31.5" stroke="#FFC250" strokeWidth="3"/>
+            </svg>
+          </span>
+        </h2>
+
+        <div className={styles.testimonialContainer}>
+          <div className={styles.testimonialsLeft}>
+            <div className={styles.avatarLeft1}>
+              <img src="https://i.pravatar.cc/120?img=12" alt="Customer" />
+            </div>
+            <div className={styles.avatarLeft2}>
+              <img src="https://i.pravatar.cc/180?img=15" alt="Customer" />
+            </div>
+            <div className={styles.avatarLeft3}>
+              <img src="https://i.pravatar.cc/80?img=32" alt="Customer" />
+            </div>
+            <div className={styles.avatarLeft4}>
+              <img src="https://i.pravatar.cc/140?img=44" alt="Customer" />
+            </div>
+          </div>
+
+          <div className={styles.testimonialCard}>
+            <p className={styles.testimonialText}>
+              <span className={styles.quoteStart} aria-hidden="true">“</span>
+              <span className={styles.testimonialCopy}>
+                Elementum delivered the site with in the timeline<br />
+                as they requested. In the end, the client found a 50%<br />
+                increase in traffic within days since its launch. They<br />
+                also had an impressive ability to use technologies that<br />
+                the company hasn't used, which have also proved to<br />
+                be easy to use and reliable
+              </span>
+              <span className={styles.quoteEnd} aria-hidden="true">”</span>
+            </p>
+          </div>
+
+          <div className={styles.testimonialsRight}>
+            <div className={styles.avatarRight1}>
+              <img src="https://i.pravatar.cc/100?img=28" alt="Customer" />
+            </div>
+            <div className={styles.avatarRight2}>
+              <img src="https://i.pravatar.cc/220?img=51" alt="Customer" />
+            </div>
+            <div className={styles.avatarRight3}>
+              <img src="https://i.pravatar.cc/120?img=63" alt="Customer" />
+            </div>
+            <div className={styles.avatarRight4}>
+              <img src="https://i.pravatar.cc/140?img=68" alt="Customer" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.newsletterSection}>
+        <div className={styles.newsletterTop}>
+          <svg className={styles.newsletterRedArrow} width="178" height="123" viewBox="0 0 178 123" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M12.5435 122.809C13.2662 123.214 14.1804 122.956 14.5854 122.233L21.1855 110.457C21.5905 109.734 21.333 108.82 20.6103 108.415C19.8876 108.01 18.9735 108.267 18.5685 108.99L12.7017 119.458L2.23361 113.591C1.51093 113.186 0.596763 113.444 0.191749 114.167C-0.213265 114.889 0.0442476 115.803 0.76692 116.208L12.5435 122.809ZM13.2769 121.5L14.7207 121.093C13.2467 115.861 14.7418 106.161 25.4135 94.9465C36.0671 83.7509 55.7638 71.1882 90.2238 60.4319L89.7769 59L89.3299 57.5681C54.59 68.4118 34.37 81.1824 23.2402 92.8785C12.1287 104.555 9.97374 115.306 11.8331 121.907L13.2769 121.5ZM89.7769 59L90.2238 60.4319C124.946 49.5938 146.763 37.4335 159.932 26.5565C173.03 15.7387 177.777 6.00587 177.777 1.64509e-05L176.277 0L174.777 -1.64509e-05C174.777 4.6608 170.874 13.628 158.022 24.2435C145.241 34.7998 123.808 46.8062 89.3299 57.5681L89.7769 59Z" fill="#FF6D6D"/>
+          </svg>
+          <svg className={styles.newsletterRedArrow2} width="178" height="123" viewBox="0 0 178 123" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M12.5435 122.809C13.2662 123.214 14.1804 122.956 14.5854 122.233L21.1855 110.457C21.5905 109.734 21.333 108.82 20.6103 108.415C19.8876 108.01 18.9735 108.267 18.5685 108.99L12.7017 119.458L2.23361 113.591C1.51093 113.186 0.596763 113.444 0.191749 114.167C-0.213265 114.889 0.0442476 115.803 0.76692 116.208L12.5435 122.809ZM13.2769 121.5L14.7207 121.093C13.2467 115.861 14.7418 106.161 25.4135 94.9465C36.0671 83.7509 55.7638 71.1882 90.2238 60.4319L89.7769 59L89.3299 57.5681C54.59 68.4118 34.37 81.1824 23.2402 92.8785C12.1287 104.555 9.97374 115.306 11.8331 121.907L13.2769 121.5ZM89.7769 59L90.2238 60.4319C124.946 49.5938 146.763 37.4335 159.932 26.5565C173.03 15.7387 177.777 6.00587 177.777 1.64509e-05L176.277 0L174.777 -1.64509e-05C174.777 4.6608 170.874 13.628 158.022 24.2435C145.241 34.7998 123.808 46.8062 89.3299 57.5681L89.7769 59Z" fill="#FF6D6D"/>
+          </svg>
+
+          <h2 className={styles.newsletterHeading}>
+            <span>Subscribe to</span>
+            <span>our newsletter</span>
+          </h2>
+
+          <p className={styles.newsletterSubtext}>To make your stay special and even more memorable</p>
+
+          <button className={styles.newsletterButton}>Subscribe Now</button>
+        </div>
+
+        <div className={styles.newsletterDivider} />
+
+        <div className={styles.newsletterFooterGrid}>
+          <div>
+            <h3>Company</h3>
+            <ul>
+              <li>Home</li>
+              <li>Studio</li>
+              <li>Service</li>
+              <li>Blog</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Terms &amp; Policies</h3>
+            <ul>
+              <li>Privacy Policy</li>
+              <li>Terms &amp; Conditions</li>
+              <li>Explore</li>
+              <li>Accessibility</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Follow Us</h3>
+            <ul>
+              <li>Instagram</li>
+              <li>LinkedIn</li>
+              <li>YouTube</li>
+              <li>Twitter</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Terms &amp; Policies</h3>
+            <ul>
+              <li>1498w Fulton st., STE</li>
+              <li>2D Chicago, IL 63867.</li>
+              <li>(123) 456789000</li>
+              <li>info@elementum.com</li>
+            </ul>
+          </div>
+        </div>
+
+        <p className={styles.newsletterCopyright}>©2023 Elementum. All rights reserved</p>
       </section>
     </div>
   )
